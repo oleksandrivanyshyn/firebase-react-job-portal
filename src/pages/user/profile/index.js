@@ -1,6 +1,9 @@
 import React from 'react';
 import PageTitle from '../../../components/PageTitle';
 import { Tabs } from 'antd';
+import PersonalInfo from './PersonalInfo';
+import Education from './Education';
+import Experience from './Experience';
 const { TabPane } = Tabs;
 
 const Profile = () => {
@@ -9,13 +12,13 @@ const Profile = () => {
       <PageTitle title="Profile" />
       <Tabs defaultActiveKey="1">
         <TabPane tab="Personal Info" key="1">
-          PersonalInfo
+          <PersonalInfo />
         </TabPane>
         <TabPane tab="Education" key="2">
-          Education
+          <Education />
         </TabPane>
         <TabPane tab="Experience" key="3">
-          Experience
+          <Experience />
         </TabPane>
       </Tabs>
     </div>
