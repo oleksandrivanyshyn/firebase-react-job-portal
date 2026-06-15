@@ -10,3 +10,7 @@
     height: 80px;
     width: 80px;
 }
+.page-title h2{
+    font-size: 25px;
+    text-transform: uppercase;
+}

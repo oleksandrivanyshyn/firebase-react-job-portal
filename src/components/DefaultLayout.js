@@ -1,6 +1,5 @@
 import { Badge } from 'antd';
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React from 'react';
 import { useNavigate } from 'react-router';
 
 const DefaultLayout = ({ children }) => {
@@ -28,7 +27,7 @@ const DefaultLayout = ({ children }) => {
     },
     {
       title: 'Profile',
-      onClick: () => navigate(`/profile/${user.id}`),
+      onClick: () => navigate(`/profile`),
       icon: <i class="ri-user-2-line"></i>,
       path: '/profile',
     },

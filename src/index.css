@@ -37,5 +37,8 @@ a{
 }
 .divider{
   border-bottom: 1px solid gray !important;
-  margin: 20px 0 !important;
+  margin: 8px 0 !important;
+}
+h1,h2,h3,h4,h5,h6{
+  margin-bottom: 0 !important;
 }
