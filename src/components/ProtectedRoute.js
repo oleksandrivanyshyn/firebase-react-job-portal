@@ -1,7 +1,9 @@
+import DefaultLayout from './DefaultLayout';
+
 const ProtectedRoute = ({ children }) => {
   const user = localStorage.getItem('user');
   if (user) {
-    return children;
+    return <DefaultLayout>{children}</DefaultLayout>;
   } else {
     window.location.href = '/login';
   }

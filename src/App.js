@@ -7,6 +7,8 @@ import PublicRoute from './components/PublicRoute';
 import { useSelector } from 'react-redux';
 import Loader from './components/Loader';
 import './stylesheets/custom-components.css';
+import './stylesheets/layout.css';
+import AppliedJobs from './pages/user/AppliedJobs';
 function App() {
   const { loading } = useSelector((state) => state.alert);
   return (
@@ -35,6 +37,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <Home />
+              </ProtectedRoute>
+            }
+          ></Route>
+          <Route
+            path={'/applied-jobs'}
+            element={
+              <ProtectedRoute>
+                <AppliedJobs />
               </ProtectedRoute>
             }
           ></Route>
