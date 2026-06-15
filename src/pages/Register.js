@@ -1,10 +1,20 @@
 import React from 'react';
-import { Form } from 'antd';
+import { Form, message } from 'antd';
 import { Link } from 'react-router';
+import { RegisterUser } from './apis/authentication';
 
 const Register = () => {
-  const onFinish = (values) => {
-    console.log('Success:', values);
+  const onFinish = async (values) => {
+    try {
+      const response = await RegisterUser(values);
+      if (response.success) {
+        message.success(response.message);
+      } else {
+        message.error(response.message);
+      }
+    } catch (error) {
+      message.error(error.message);
+    }
   };
   return (
     <div className="h-screen d-flex justify-content-center align-center align-items-center bg-primary">
@@ -22,7 +32,7 @@ const Register = () => {
             <input type="password" />
           </Form.Item>
           <button type="submit" className="primary-contained-btn w-100 mt-2">
-            Login
+            Register
           </button>
           <Link to="/login" className="mt-2 d-block">
             Already a member? Click here to login
