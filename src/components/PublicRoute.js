@@ -1,5 +1,3 @@
-import React from 'react';
-
 const PublicRoute = ({ children }) => {
   const user = localStorage.getItem('user');
   if (user) {
