@@ -8,7 +8,7 @@ const Experience = () => {
         {(fields, { add, remove }) => (
           <>
             {fields.map(({ key, name, ...restField }) => (
-              <Row gutter={[10, 10]} align="middle">
+              <Row key={key} gutter={[10, 10]} align="middle">
                 <Col span={8}>
                   <Form.Item
                     {...restField}
@@ -49,11 +49,18 @@ const Experience = () => {
                     <input type="text" />
                   </Form.Item>
                 </Col>
-                <i class="ri-delete-bin-line" onClick={() => remove(name)}></i>
+                <i
+                  className="ri-delete-bin-line"
+                  onClick={() => remove(name)}
+                ></i>
               </Row>
             ))}
             <Form.Item>
-              <button className="primary-outlined-btn" onClick={() => add()}>
+              <button
+                type="button"
+                className="primary-outlined-btn"
+                onClick={() => add()}
+              >
                 ADD EXPERINCE
               </button>
             </Form.Item>
@@ -65,7 +72,7 @@ const Experience = () => {
         {(fields, { add, remove }) => (
           <>
             {fields.map(({ key, name, ...restField }) => (
-              <Row gutter={[10, 10]} align="middle">
+              <Row key={key} gutter={[10, 10]} align="middle">
                 <Col span={8}>
                   <Form.Item
                     {...restField}
@@ -83,7 +90,7 @@ const Experience = () => {
                     rules={[{ required: true, message: 'required' }]}
                     label="Description"
                   >
-                    <textarea type="text" />
+                    <textarea />
                   </Form.Item>
                 </Col>
                 <Col span={4}>
@@ -96,12 +103,18 @@ const Experience = () => {
                     <input type="text" />
                   </Form.Item>
                 </Col>
-
-                <i class="ri-delete-bin-line" onClick={() => remove(name)}></i>
+                <i
+                  className="ri-delete-bin-line"
+                  onClick={() => remove(name)}
+                ></i>
               </Row>
             ))}
             <Form.Item>
-              <button className="primary-outlined-btn" onClick={() => add()}>
+              <button
+                type="button"
+                className="primary-outlined-btn"
+                onClick={() => add()}
+              >
                 ADD PROJECT
               </button>
             </Form.Item>

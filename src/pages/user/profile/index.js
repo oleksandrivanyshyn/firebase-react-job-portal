@@ -1,26 +1,45 @@
 import React from 'react';
 import PageTitle from '../../../components/PageTitle';
-import { Tabs } from 'antd';
+import { Form, Tabs } from 'antd';
 import PersonalInfo from './PersonalInfo';
 import Education from './Education';
 import Experience from './Experience';
-const { TabPane } = Tabs;
 
-const Profile = () => {
+const Profile = ({ userData, onFinish }) => {
+  const tabItems = [
+    {
+      key: '1',
+      label: 'Personal Info',
+      children: <PersonalInfo />,
+    },
+    {
+      key: '2',
+      label: 'Education',
+      children: <Education />,
+    },
+    {
+      key: '3',
+      label: 'Experience',
+      children: <Experience />,
+    },
+  ];
+
   return (
     <div>
       <PageTitle title="Profile" />
-      <Tabs defaultActiveKey="1">
-        <TabPane tab="Personal Info" key="1">
-          <PersonalInfo />
-        </TabPane>
-        <TabPane tab="Education" key="2">
-          <Education />
-        </TabPane>
-        <TabPane tab="Experience" key="3">
-          <Experience />
-        </TabPane>
-      </Tabs>
+      <Form
+        layout="vertical"
+        onFinish={onFinish}
+        initialValues={{
+          ...userData,
+          education: userData?.education?.length ? userData.education : [{}],
+          skills: userData?.skills?.length ? userData.skills : [{}],
+          experinces: userData?.experinces?.length ? userData.experinces : [{}],
+          projects: userData?.projects?.length ? userData.projects : [{}],
+        }}
+      >
+        <Tabs defaultActiveKey="1" items={tabItems} />
+      </Form>
     </div>
   );
 };

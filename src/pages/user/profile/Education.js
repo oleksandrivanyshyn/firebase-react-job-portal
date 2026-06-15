@@ -8,7 +8,7 @@ const Education = () => {
         {(fields, { add, remove }) => (
           <>
             {fields.map(({ key, name, ...restField }) => (
-              <Row gutter={[10, 10]} align="middle">
+              <Row key={key} gutter={[10, 10]} align="middle">
                 <Col span={8}>
                   <Form.Item
                     {...restField}
@@ -39,11 +39,18 @@ const Education = () => {
                     <input type="text" />
                   </Form.Item>
                 </Col>
-                <i class="ri-delete-bin-line" onClick={() => remove(name)}></i>
+                <i
+                  className="ri-delete-bin-line"
+                  onClick={() => remove(name)}
+                ></i>
               </Row>
             ))}
             <Form.Item>
-              <button className="primary-outlined-btn" onClick={() => add()}>
+              <button
+                type="button"
+                className="primary-outlined-btn"
+                onClick={() => add()}
+              >
                 ADD EDUCATION
               </button>
             </Form.Item>
@@ -55,7 +62,7 @@ const Education = () => {
         {(fields, { add, remove }) => (
           <>
             {fields.map(({ key, name, ...restField }) => (
-              <Row gutter={[10, 10]} align="middle">
+              <Row key={key} gutter={[10, 10]} align="middle">
                 <Col span={8}>
                   <Form.Item
                     {...restField}
@@ -76,12 +83,18 @@ const Education = () => {
                     <input type="text" />
                   </Form.Item>
                 </Col>
-
-                <i class="ri-delete-bin-line" onClick={() => remove(name)}></i>
+                <i
+                  className="ri-delete-bin-line"
+                  onClick={() => remove(name)}
+                ></i>
               </Row>
             ))}
             <Form.Item>
-              <button className="primary-outlined-btn" onClick={() => add()}>
+              <button
+                type="button"
+                className="primary-outlined-btn"
+                onClick={() => add()}
+              >
                 ADD SKILLS
               </button>
             </Form.Item>
