@@ -1,10 +1,15 @@
-import { Button } from 'antd';
+import { BrowserRouter, Route, Routes } from 'react-router';
+import Login from './pages/Login';
+import Register from './pages/Register';
 function App() {
   return (
-    <div className="m-5">
-      <h1>SHEYJOBS-LITE</h1>
-      <Button type="primary">button</Button>
-      <button className="primary-btn">button</button>
+    <div>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/login" element={<Login />}></Route>
+          <Route path="/register" element={<Register />}></Route>
+        </Routes>
+      </BrowserRouter>
     </div>
   );
 }
