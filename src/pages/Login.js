@@ -2,10 +2,16 @@ import React from 'react';
 import { Form, message } from 'antd';
 import { Link } from 'react-router';
 import { LoginUser } from './apis/authentication';
+import { useDispatch } from 'react-redux';
+import { HideLoading, ShowLoading } from '../redux/alertSlice';
 const Login = () => {
+  const dispatch = useDispatch();
+
   const onFinish = async (values) => {
     try {
+      dispatch(ShowLoading());
       const response = await LoginUser(values);
+      dispatch(HideLoading());
       if (response.success) {
         message.success(response.message);
         localStorage.setItem('user', JSON.stringify(response.data));
@@ -14,6 +20,7 @@ const Login = () => {
         message.error(response.message);
       }
     } catch (error) {
+      dispatch(HideLoading());
       message.error(error.message);
     }
   };
