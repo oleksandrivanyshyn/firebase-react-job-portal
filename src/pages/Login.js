@@ -8,6 +8,8 @@ const Login = () => {
       const response = await LoginUser(values);
       if (response.success) {
         message.success(response.message);
+        localStorage.setItem('user', JSON.stringify(response.data));
+        window.location.href = '/';
       } else {
         message.error(response.message);
       }
