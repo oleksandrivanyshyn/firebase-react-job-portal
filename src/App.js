@@ -10,6 +10,8 @@ import './stylesheets/custom-components.css';
 import './stylesheets/layout.css';
 import AppliedJobs from './pages/user/AppliedJobs';
 import Profile from './pages/user/profile';
+import PostedJobs from './pages/user/postedjobs';
+import NewEditJob from './pages/user/postedjobs/NewEditJob';
 function App() {
   const { loading } = useSelector((state) => state.alert);
   return (
@@ -46,6 +48,30 @@ function App() {
             element={
               <ProtectedRoute>
                 <AppliedJobs />
+              </ProtectedRoute>
+            }
+          ></Route>
+          <Route
+            path={'/posted-jobs'}
+            element={
+              <ProtectedRoute>
+                <PostedJobs />
+              </ProtectedRoute>
+            }
+          ></Route>
+          <Route
+            path={'/posted-jobs/new'}
+            element={
+              <ProtectedRoute>
+                <NewEditJob />
+              </ProtectedRoute>
+            }
+          ></Route>
+          <Route
+            path={'/posted-jobs/edit/:id'}
+            element={
+              <ProtectedRoute>
+                <NewEditJob />
               </ProtectedRoute>
             }
           ></Route>
