@@ -12,6 +12,7 @@ import AppliedJobs from './pages/user/AppliedJobs';
 import Profile from './pages/user/profile';
 import PostedJobs from './pages/user/postedjobs';
 import NewEditJob from './pages/user/postedjobs/NewEditJob';
+
 function App() {
   const { loading } = useSelector((state) => state.alert);
   return (
@@ -76,7 +77,7 @@ function App() {
             }
           ></Route>
           <Route
-            path="/profile"
+            path="/profile/:id"
             element={
               <ProtectedRoute>
                 <Profile />
