@@ -1,15 +1,40 @@
 import React from 'react';
 import { useNavigate, useParams } from 'react-router';
 import PageTitle from '../../../components/PageTitle';
-import { Col, Form, Row } from 'antd';
+import { Col, Form, message, Row } from 'antd';
+import { useDispatch } from 'react-redux';
+import { HideLoading, ShowLoading } from '../../../redux/alertSlice';
+import { addNewJobPost } from '../../apis/jobs';
 
 const NewEditJob = () => {
+  const dispatch = useDispatch();
   const params = useParams();
   const navigate = useNavigate();
+  const onFinish = async (values) => {
+    try {
+      dispatch(ShowLoading());
+      let response = null;
+      if (params.id) {
+        response = { success: true, message: 'Job updated successfully' };
+      } else {
+        response = await addNewJobPost(values);
+      }
+      if (response.success) {
+        message.success(response.message);
+        navigate('/posted-jobs');
+      } else {
+        message.error(response.message);
+      }
+      dispatch(HideLoading());
+    } catch (error) {
+      dispatch(HideLoading());
+      message.error(error.message);
+    }
+  };
   return (
     <div>
       <PageTitle title={params.id ? 'Edit Job' : 'Add New Job Post'} />
-      <Form layout="vertical">
+      <Form layout="vertical" onFinish={onFinish}>
         <Row gutter={[10, 10]}>
           <Col span={12}>
             <Form.Item
