@@ -14,44 +14,56 @@ function JobDescription() {
   const [showApplyButton, setShowApplyButton] = React.useState(true);
   const [alreadyApplied, setAlreadyApplied] = React.useState(false);
   const user = JSON.parse(localStorage.getItem('user'));
-  const getData = async () => {
-    try {
-      dispatch(ShowLoading());
-      const response = await getJobById(params.id);
 
-      if (
-        response.data.postedByUserId ===
-        JSON.parse(localStorage.getItem('user')).id
-      ) {
-        setShowApplyButton(false);
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        dispatch(ShowLoading());
+        const response = await getJobById(params.id);
+
+        if (response.success && response.data) {
+          setJobData(response.data);
+          const currentUserId = user?.id || user?._id;
+
+          if (response.data.postedByUserId === currentUserId) {
+            setShowApplyButton(false);
+          }
+
+          const applicationsResponse = await getApplicationsByJobId(params.id);
+
+          if (applicationsResponse.success && applicationsResponse.data) {
+            const hasApplied =
+              applicationsResponse.data.filter(
+                (item) => item.userId === currentUserId,
+              ).length > 0;
+
+            if (hasApplied) {
+              setShowApplyButton(false);
+              setAlreadyApplied(true);
+            }
+          }
+        } else {
+          message.error(response.message);
+        }
+      } catch (error) {
+        message.error(error.message);
+      } finally {
+        dispatch(HideLoading());
       }
+    };
 
-      const applicationsResponse = await getApplicationsByJobId(params.id);
-
-      if (
-        applicationsResponse.data.filter((item) => item.userId === user.id)
-          .length > 0
-      ) {
-        setShowApplyButton(false);
-        setAlreadyApplied(true);
-      }
-
-      dispatch(HideLoading());
-      if (response.success) {
-        setJobData(response.data);
-      } else {
-        message.error(response.message);
-      }
-    } catch (error) {
-      message.error(error.message);
-    }
-  };
+    getData();
+  }, [params.id, dispatch]);
 
   const applyNow = async () => {
     try {
       dispatch(ShowLoading());
-      const response = await applyJobPost(jobData);
-      dispatch(HideLoading());
+      const response = await applyJobPost({
+        ...jobData,
+        userId: user?.id || user?._id,
+        userName: user?.name,
+        appliedAt: new Date().toISOString(),
+      });
       if (response.success) {
         message.success(response.message);
         navigate('/');
@@ -60,13 +72,10 @@ function JobDescription() {
       }
     } catch (error) {
       message.error(error.message);
+    } finally {
       dispatch(HideLoading());
     }
   };
-
-  useEffect(() => {
-    getData();
-  }, []);
 
   return (
     jobData && (
@@ -132,13 +141,18 @@ function JobDescription() {
 
             <div className="d-flex gap-2 mt-3 justify-content-end">
               <button
+                type="button"
                 className="primary-outlined-btn"
                 onClick={() => navigate('/')}
               >
                 CANCEL
               </button>
               {showApplyButton && (
-                <button className="primary-contained-btn" onClick={applyNow}>
+                <button
+                  type="button"
+                  className="primary-contained-btn"
+                  onClick={applyNow}
+                >
                   APPLY NOW
                 </button>
               )}
