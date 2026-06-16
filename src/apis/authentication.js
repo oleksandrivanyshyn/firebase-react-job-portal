@@ -1,5 +1,5 @@
 import { collection, addDoc, query, where, getDocs } from 'firebase/firestore';
-import { fireDB } from '../../firebaseConfig';
+import { fireDB } from '../firebaseConfig';
 import CryptoJs from 'crypto-js';
 export const LoginUser = async (payload) => {
   try {

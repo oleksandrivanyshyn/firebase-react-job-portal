@@ -4,7 +4,7 @@ import PageTitle from '../../../components/PageTitle';
 import { Col, Form, message, Row } from 'antd';
 import { useDispatch } from 'react-redux';
 import { HideLoading, ShowLoading } from '../../../redux/alertSlice';
-import { addNewJobPost } from '../../apis/jobs';
+import { addNewJobPost } from '../../../apis/jobs';
 
 const NewEditJob = () => {
   const dispatch = useDispatch();

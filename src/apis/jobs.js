@@ -1,6 +1,6 @@
 import { addDoc, collection } from 'firebase/firestore';
 import moment from 'moment';
-import { fireDB } from '../../firebaseConfig';
+import { fireDB } from '../firebaseConfig';
 
 export const addNewJobPost = async (payload) => {
   const user = JSON.parse(localStorage.getItem('user'));

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Form, message } from 'antd';
 import { Link } from 'react-router';
-import { LoginUser } from './apis/authentication';
+import { LoginUser } from '../apis/authentication';
 import { useDispatch } from 'react-redux';
 import { HideLoading, ShowLoading } from '../redux/alertSlice';
 const Login = () => {

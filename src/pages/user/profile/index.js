@@ -6,7 +6,7 @@ import Education from './Education';
 import PersonalInfo from './PersonalInfo';
 import { useDispatch } from 'react-redux';
 import { ShowLoading, HideLoading } from '../../../redux/alertSlice';
-import { getUserProfile, updateUserProfile } from '../../apis/users';
+import { getUserProfile, updateUserProfile } from '../../../apis/users';
 import { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router';
 
