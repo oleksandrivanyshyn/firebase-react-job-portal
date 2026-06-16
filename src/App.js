@@ -15,6 +15,7 @@ import NewEditJob from './pages/user/postedjobs/NewEditJob';
 import AllJobs from './pages/admin/AllJobs';
 import Allusers from './pages/admin/AllUsers';
 import JobDescription from './pages/JobDescription';
+import Notifications from './pages/Notifications';
 
 function App() {
   const { loading } = useSelector((state) => state.alert);
@@ -95,6 +96,14 @@ function App() {
               </ProtectedRoute>
             }
           ></Route>
+          <Route
+            path="/notifications"
+            element={
+              <ProtectedRoute>
+                <Notifications />
+              </ProtectedRoute>
+            }
+          />
           <Route
             path="/admin/jobs"
             element={

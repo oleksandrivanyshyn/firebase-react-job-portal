@@ -1,82 +1,86 @@
 import { Badge } from 'antd';
 import React, { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
-import { getUserProfile } from '../apis/users';
+import { getUserNofications, getUserProfile } from '../apis/users';
 import { HideLoading, ShowLoading } from '../redux/alertSlice';
+import { SetReloadNotifications } from '../redux/notifications';
+
+const userMenu = (navigate, userId) => [
+  {
+    title: 'Home',
+    onClick: () => navigate('/'),
+    icon: <i className="ri-home-7-line"></i>,
+    path: '/',
+  },
+  {
+    title: 'Applied Jobs',
+    onClick: () => navigate('/applied-jobs'),
+    icon: <i className="ri-file-list-3-line"></i>,
+    path: '/applied-jobs',
+  },
+  {
+    title: 'Posted Jobs',
+    onClick: () => navigate('/posted-jobs'),
+    icon: <i className="ri-file-list-2-line"></i>,
+    path: '/posted-jobs',
+  },
+  {
+    title: 'Profile',
+    onClick: () => navigate(`/profile/${userId}`),
+    icon: <i className="ri-user-2-line"></i>,
+    path: '/profile',
+  },
+  {
+    title: 'Logout',
+    onClick: () => {
+      localStorage.removeItem('user');
+      navigate('/login');
+    },
+    icon: <i className="ri-logout-box-r-line"></i>,
+    path: '/login',
+  },
+];
+
+const adminMenu = (navigate) => [
+  {
+    title: 'Home',
+    onClick: () => navigate('/'),
+    icon: <i className="ri-home-7-line"></i>,
+    path: '/',
+  },
+  {
+    title: 'Jobs',
+    onClick: () => navigate('/admin/jobs'),
+    icon: <i className="ri-file-list-2-line"></i>,
+    path: '/admin/jobs',
+  },
+  {
+    title: 'Users',
+    onClick: () => navigate('/admin/users'),
+    icon: <i className="ri-user-2-line"></i>,
+    path: '/admin/users',
+  },
+  {
+    title: 'Logout',
+    onClick: () => {
+      localStorage.removeItem('user');
+      navigate('/login');
+    },
+    icon: <i className="ri-logout-box-r-line"></i>,
+    path: '/login',
+  },
+];
 
 function DefaultLayout({ children }) {
   const user = JSON.parse(localStorage.getItem('user'));
+  const { reloadNotifications, unreadNotifications } = useSelector(
+    (state) => state.notifications,
+  );
   const [collapsed, setCollapsed] = React.useState(false);
   const [menuToRender, setMenuToRender] = React.useState([]);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
-  const userMenu = [
-    {
-      title: 'Home',
-      onClick: () => navigate('/'),
-      icon: <i className="ri-home-7-line"></i>,
-      path: '/',
-    },
-    {
-      title: 'Applied Jobs',
-      onClick: () => navigate('/applied-jobs'),
-      icon: <i className="ri-file-list-3-line"></i>,
-      path: '/applied-jobs',
-    },
-    {
-      title: 'Posted Jobs',
-      onClick: () => navigate('/posted-jobs'),
-      icon: <i className="ri-file-list-2-line"></i>,
-      path: '/posted-jobs',
-    },
-    {
-      title: 'Profile',
-      onClick: () => navigate(`/profile/${user?.id || user?._id}`),
-      icon: <i className="ri-user-2-line"></i>,
-      path: '/profile',
-    },
-    {
-      title: 'Logout',
-      onClick: () => {
-        localStorage.removeItem('user');
-        navigate('/login');
-      },
-      icon: <i className="ri-logout-box-r-line"></i>,
-      path: '/login',
-    },
-  ];
-
-  const adminMenu = [
-    {
-      title: 'Home',
-      onClick: () => navigate('/'),
-      icon: <i className="ri-home-7-line"></i>,
-      path: '/',
-    },
-    {
-      title: 'Jobs',
-      onClick: () => navigate('/admin/jobs'),
-      icon: <i className="ri-file-list-2-line"></i>,
-      path: '/admin/jobs',
-    },
-    {
-      title: 'Users',
-      onClick: () => navigate('/admin/users'),
-      icon: <i className="ri-user-2-line"></i>,
-      path: '/admin/users',
-    },
-    {
-      title: 'Logout',
-      onClick: () => {
-        localStorage.removeItem('user');
-        navigate('/login');
-      },
-      icon: <i className="ri-logout-box-r-line"></i>,
-      path: '/login',
-    },
-  ];
 
   useEffect(() => {
     const getData = async () => {
@@ -88,19 +92,38 @@ function DefaultLayout({ children }) {
         if (userId) {
           const response = await getUserProfile(userId);
           if (response?.data?.isAdmin === true) {
-            setMenuToRender(adminMenu);
+            setMenuToRender(adminMenu(navigate));
           } else {
-            setMenuToRender(userMenu);
+            setMenuToRender(userMenu(navigate, userId));
           }
         }
       } catch (error) {
         console.error(error);
+      } finally {
+        dispatch(HideLoading());
       }
-      dispatch(HideLoading());
     };
 
     getData();
-  }, [dispatch]);
+  }, [dispatch, navigate]);
+
+  useEffect(() => {
+    const loadNotifications = async () => {
+      try {
+        dispatch(ShowLoading());
+        await getUserNofications();
+        dispatch(SetReloadNotifications(false));
+      } catch (error) {
+        console.error(error);
+      } finally {
+        dispatch(HideLoading());
+      }
+    };
+
+    if (reloadNotifications && user) {
+      loadNotifications();
+    }
+  }, [reloadNotifications, dispatch, user]);
 
   return (
     <div className="layout">
@@ -149,11 +172,15 @@ function DefaultLayout({ children }) {
           </div>
           <div className="d-flex gap-1 align-items-center">
             <Badge
-              count={1}
+              count={unreadNotifications?.length || 0}
               className="mx-5"
               onClick={() => navigate('/notifications')}
+              style={{ cursor: 'pointer' }}
             >
-              <i className="ri-notification-line"></i>
+              <i
+                className="ri-notification-line"
+                style={{ cursor: 'pointer' }}
+              ></i>
             </Badge>
 
             <span>{user?.name}</span>
