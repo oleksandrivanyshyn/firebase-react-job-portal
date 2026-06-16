@@ -1,6 +1,7 @@
 import { collection, addDoc, query, where, getDocs } from 'firebase/firestore';
 import { fireDB } from '../firebaseConfig';
 import CryptoJs from 'crypto-js';
+
 export const LoginUser = async (payload) => {
   try {
     const qry = query(
@@ -38,8 +39,15 @@ export const LoginUser = async (payload) => {
         };
       }
     }
-  } catch (error) {}
+  } catch (error) {
+    return {
+      success: false,
+      message: error.message,
+      data: null,
+    };
+  }
 };
+
 export const RegisterUser = async (payload) => {
   try {
     const qry = query(

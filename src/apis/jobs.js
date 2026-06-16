@@ -23,6 +23,14 @@ export const addNewJobPost = async (payload) => {
       postedByUserName: user.name,
       postedOn: moment().format('DD-MM-YYYY HH:mm A'),
     });
+
+    await addDoc(collection(fireDB, 'users', 'admin', 'notifications'), {
+      title: `New Job Post Request from ${user.name}`,
+      onClick: `/admin/jobs`,
+      createdAt: moment().format('DD-MM-YYYY HH:mm A'),
+      status: 'unread',
+    });
+
     return {
       success: true,
       message: 'Job posted successfully',
@@ -35,6 +43,7 @@ export const addNewJobPost = async (payload) => {
     };
   }
 };
+
 export const getPostedJobsByUserId = async (userId) => {
   try {
     const jobs = [];
@@ -142,7 +151,6 @@ export const changeJobStatusFromAdmin = async (payload) => {
       updatedOn: moment().format('DD-MM-YYYY HH:mm A'),
     });
 
-    // send notification to user
     await addDoc(
       collection(fireDB, 'users', payload.postedByUserId, 'notifications'),
       {
@@ -196,7 +204,6 @@ export const applyJobPost = async (payload) => {
       status: 'pending',
     });
 
-    // send notification to job poster
     await addDoc(
       collection(fireDB, 'users', job.postedByUserId, 'notifications'),
       {
@@ -291,7 +298,6 @@ export const changeApplicationStatus = async (payload) => {
       status: payload.status,
     });
 
-    // send notification to user
     await addDoc(collection(fireDB, `users/${payload.userId}/notifications`), {
       title: `Your application for ${payload.jobTitle} in ${payload.company} is ${payload.status}`,
       onClick: `/applied-jobs`,
