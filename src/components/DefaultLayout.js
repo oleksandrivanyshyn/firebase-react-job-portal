@@ -1,11 +1,16 @@
 import { Badge } from 'antd';
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router';
+import { getUserProfile } from '../apis/users';
+import { HideLoading, ShowLoading } from '../redux/alertSlice';
 
-const DefaultLayout = ({ children }) => {
+function DefaultLayout({ children }) {
   const user = JSON.parse(localStorage.getItem('user'));
   const [collapsed, setCollapsed] = React.useState(false);
+  const [menuToRender, setMenuToRender] = React.useState([]);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const userMenu = [
     {
@@ -28,7 +33,7 @@ const DefaultLayout = ({ children }) => {
     },
     {
       title: 'Profile',
-      onClick: () => navigate(`/profile/${user?._id || user?.id}`),
+      onClick: () => navigate(`/profile/${user?.id || user?._id}`),
       icon: <i className="ri-user-2-line"></i>,
       path: '/profile',
     },
@@ -73,7 +78,29 @@ const DefaultLayout = ({ children }) => {
     },
   ];
 
-  const currentMenu = user?.isAdmin ? adminMenu : userMenu;
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        dispatch(ShowLoading());
+        const storedUser = JSON.parse(localStorage.getItem('user'));
+        const userId = storedUser?.id || storedUser?._id;
+
+        if (userId) {
+          const response = await getUserProfile(userId);
+          if (response?.data?.isAdmin === true) {
+            setMenuToRender(adminMenu);
+          } else {
+            setMenuToRender(userMenu);
+          }
+        }
+      } catch (error) {
+        console.error(error);
+      }
+      dispatch(HideLoading());
+    };
+
+    getData();
+  }, [dispatch]);
 
   return (
     <div className="layout">
@@ -84,7 +111,7 @@ const DefaultLayout = ({ children }) => {
             width: collapsed ? '40px' : '150px',
           }}
         >
-          {currentMenu.map((item, index) => {
+          {menuToRender.map((item, index) => {
             const isActive =
               item.path === '/'
                 ? window.location.pathname === '/'
@@ -92,7 +119,7 @@ const DefaultLayout = ({ children }) => {
 
             return (
               <div
-                className={`menu-item ${isActive && 'active-menu-item'}`}
+                className={`menu-item ${isActive ? 'active-menu-item' : ''}`}
                 onClick={item.onClick}
                 key={index}
               >
@@ -137,6 +164,6 @@ const DefaultLayout = ({ children }) => {
       </div>
     </div>
   );
-};
+}
 
 export default DefaultLayout;
