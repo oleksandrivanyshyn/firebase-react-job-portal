@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { Link, useNavigate } from 'react-router';
+import { useNavigate } from 'react-router';
 import PageTitle from '../../../components/PageTitle';
 import { HideLoading, ShowLoading } from '../../../redux/alertSlice';
 import {
@@ -9,7 +9,6 @@ import {
   getApplicationsByJobId,
 } from '../../../apis/jobs';
 import { message, Table } from 'antd';
-import { useEffect } from 'react';
 import AppliedCandidates from './AppliedCandidates';
 
 function PostedJobs() {
@@ -19,33 +18,44 @@ function PostedJobs() {
   const [showAppliedCandidates, setShowAppliedCandidates] =
     React.useState(false);
   const [appiledCandidates, setAppiledCandidates] = React.useState([]);
+
   const getData = async () => {
     try {
       dispatch(ShowLoading());
       const user = JSON.parse(localStorage.getItem('user'));
-      const response = await getPostedJobsByUserId(user.id);
-      if (response.success) {
-        setData(response.data);
+      const userId = user?.id || user?._id;
+
+      if (userId) {
+        const response = await getPostedJobsByUserId(userId);
+        if (response.success) {
+          setData(response.data);
+        }
       }
-      dispatch(HideLoading());
     } catch (error) {
-      dispatch(HideLoading());
       message.error(error.message);
+    } finally {
+      dispatch(HideLoading());
     }
   };
+
+  useEffect(() => {
+    getData();
+  }, [dispatch]);
+
   const deleteJob = async (id) => {
     try {
       dispatch(ShowLoading());
-
       const response = await deleteJobById(id);
       if (response.success) {
-        setData(response.data);
+        message.success(response.message);
         getData();
+      } else {
+        message.error(response.message);
       }
-      dispatch(HideLoading());
     } catch (error) {
-      dispatch(HideLoading());
       message.error(error.message);
+    } finally {
+      dispatch(HideLoading());
     }
   };
 
@@ -55,14 +65,14 @@ function PostedJobs() {
       const response = await getApplicationsByJobId(id);
       if (response.success) {
         setAppiledCandidates(response.data);
-        if (!showAppliedCandidates) {
-          setShowAppliedCandidates(true);
-        }
+        setShowAppliedCandidates(true);
+      } else {
+        message.error(response.message);
       }
-      dispatch(HideLoading());
     } catch (error) {
-      dispatch(HideLoading());
       message.error(error.message);
+    } finally {
+      dispatch(HideLoading());
     }
   };
 
@@ -70,56 +80,65 @@ function PostedJobs() {
     {
       title: 'Title',
       dataIndex: 'title',
+      key: 'title',
     },
     {
       title: 'Company',
       dataIndex: 'company',
+      key: 'company',
     },
     {
       title: 'Posted On',
       dataIndex: 'postedOn',
+      key: 'postedOn',
     },
     {
       title: 'Last Date to Apply',
       dataIndex: 'lastDateToApply',
+      key: 'lastDateToApply',
     },
     {
       title: 'Status',
       dataIndex: 'status',
+      key: 'status',
     },
     {
       title: 'Action',
       dataIndex: 'action',
-      render: (text, record) => (
-        <div className="d-flex gap-3 align-items-center">
-          <span
-            className="underline"
-            onClick={() => getAppliedCandidates(record.id)}
-          >
-            candidates
-          </span>
-          <i
-            class="ri-delete-bin-line"
-            onClick={() => deleteJob(record.id)}
-          ></i>
-          <i
-            class="ri-pencil-line"
-            onClick={() => navigate(`/posted-jobs/edit/${record.id}`)}
-          ></i>
-        </div>
-      ),
+      key: 'action',
+      render: (text, record) => {
+        const jobId = record.id || record._id;
+        return (
+          <div className="d-flex gap-3 align-items-center">
+            <span
+              className="underline"
+              style={{ cursor: 'pointer' }}
+              onClick={() => getAppliedCandidates(jobId)}
+            >
+              candidates
+            </span>
+            <i
+              className="ri-delete-bin-line"
+              style={{ cursor: 'pointer' }}
+              onClick={() => deleteJob(jobId)}
+            ></i>
+            <i
+              className="ri-pencil-line"
+              style={{ cursor: 'pointer' }}
+              onClick={() => navigate(`/posted-jobs/edit/${jobId}`)}
+            ></i>
+          </div>
+        );
+      },
     },
   ];
-
-  useEffect(() => {
-    getData();
-  }, []);
 
   return (
     <div>
       <div className="d-flex justify-content-between">
         <PageTitle title="Posted Jobs" />
         <button
+          type="button"
           className="primary-outlined-btn"
           onClick={() => navigate('/posted-jobs/new')}
         >
@@ -127,7 +146,11 @@ function PostedJobs() {
         </button>
       </div>
 
-      <Table columns={columns} dataSource={data} />
+      <Table
+        columns={columns}
+        dataSource={data}
+        rowKey={(record) => record.id || record._id}
+      />
 
       {showAppliedCandidates && (
         <AppliedCandidates
