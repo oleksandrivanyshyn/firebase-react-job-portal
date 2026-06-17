@@ -1,70 +1,82 @@
-# Getting Started with Create React App
+# Firebase & React Job Portal
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A modern Single Page Application (SPA) for searching and posting jobs, built with **React** and **Firebase**. The project features a role-based access model (User / Admin), user profile management, and real-time tracking of job applications.
 
-## Available Scripts
+---
 
-In the project directory, you can run:
+## ✨ Features
 
-### `npm start`
+* **Authentication (Firebase Auth):** User registration and login with protected and public routing.
+* **User Profile (Dashboard):** 
+    * Personal information editing.
+    * Adding and updating work experience and education histories.
+* **Job Management:**
+    * Creating, editing, and deleting own job postings.
+    * Reviewing candidates who applied for a job (Applied Candidates).
+    * Searching and filtering job openings on the main page.
+* **Admin Dashboard:**
+    * Viewing and moderating all platform users (`AllUsers`).
+    * Moderating all published job openings (`AllJobs`).
+* **State Management:** Utilizing **Redux Toolkit** for global state handling (alerts, loading states).
+* **Notification System:** Implemented via push notifications or internal user alerts.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+---
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## 🛠️ Tech Stack
 
-### `npm test`
+* **Frontend:** React.js, React Router v6
+* **State Management:** Redux Toolkit (slices for alert, notifications)
+* **Backend-as-a-Service:** Firebase (Firestore DB, Firebase Auth)
+* **Styling:** Custom CSS / Layout CSS
+* **Linter/Formatter:** Prettier
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+---
 
-### `npm run build`
+## 📂 Project Structure
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```text
+src/
+├── apis/                  # Firebase API requests (auth, jobs, users)
+├── components/            # Reusable components (Loader, Filters, Layout)
+├── firebaseConfig.js      # Firebase configuration & initialization
+├── pages/
+│   ├── Home.js            # Main page with job list
+│   ├── Login/Register.js  # Authentication pages
+│   ├── admin/             # Admin panel dashboards (AllJobs, AllUsers)
+│   └── user/              # User profiles, job posting, and application tracking
+├── redux/                 # State management configuration (store, slices)
+└── stylesheets/           # Project styles (layout, custom-components)
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+---
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## 🚀 Getting Started
 
-### `npm run eject`
+### 1. Clone the repository
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+```bash
+git clone https://github.com/oleksandrivanyshyn/firebase-react-job-portal.git
+cd firebase-react-job-portal-277b9b1fc6d8cf48d5c567f665ad6c9df12a75e0
+```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### 2. Install dependencies
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+```bash
+npm install
+```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### 3. Start the project in development mode
 
-## Learn More
+```bash
+npm start
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+The application will open in your browser at [http://localhost:3000](http://localhost:3000).
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+---
 
-### Code Splitting
+## 🔧 Scripts
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+* `npm start` — Runs the app in the local development mode.
+* `npm run build` — Builds the app for production to the `build` folder.
+* `npm test` — Launches the test runner.
